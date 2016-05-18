@@ -1,9 +1,6 @@
 # coding=utf-8
 #!usr/bin/env python
-import base64
 import time
-import sys
-import Tkinter,tkFileDialog
 
 class HideException(Exception):
     pass
@@ -114,10 +111,11 @@ def extract_char(bmp_filename):
         decrypted = ''.join(decrypted).split(marker)
         # src_filename = decrypted[1]
         # src_data = decrypted[2]
-        print decrypted[0]
+        print decrypted
+
+
 
 def main():
-    
     print u"请选择需要进行数据隐藏的类型:"
     print u"1.LSB图像隐藏文字"
     print u"2.LSB图像隐藏文件"
@@ -133,14 +131,11 @@ def main():
         print u"[+] 请输入需要隐藏的文字"
         content = raw_input('1.> ')
         try:
-            f = open(image, 'a+')
+            hidechar(image, content)
         except Exception, e:
             print '[-] ', e
-        contentb = base64.standard_b64encode(content)
-        f.write('\n')
-        f.write(contentb)
         print u"[+] 信息隐藏成功"
-        f.close()
+    
     elif choice == '2':
         print u"[+] 请输入原文件名："
         image = raw_input('2.> ')
@@ -162,15 +157,9 @@ def main():
             print ".",
         print
         try:
-            f = open(files, 'rb')
-        except Exception, e:
-            print e
-        for line in f:
-            pass
-        f.close()
-        contentb = line
-        contentb = base64.decodestring(contentb)
-        print contentb
+            extract_char(files)
+        except Exception,e:
+            print e            
         print u"[+] 信息提取成功"
     elif choice == '4':
         print u"[+] 请输入添加数据后的BMP文件名："
