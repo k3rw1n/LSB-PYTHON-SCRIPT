@@ -4,6 +4,7 @@ import tkFileDialog
 import tkMessageBox
 import base64
 
+
 class HideException(Exception):
     pass
 
@@ -47,6 +48,7 @@ def hide(bmp_filename, src_filename):
     bmp.write(''.join(encrypted))
     bmp.close()
 
+
 def hidechar(bmp_filename, src_char):
     secret = marker + src_char + marker
     bmp = open(bmp_filename, 'rb+')
@@ -67,6 +69,7 @@ def hidechar(bmp_filename, src_char):
     bmp.seek(55)
     bmp.write(''.join(encrypted))
     bmp.close()
+
 
 def decrypt_char(container):
     sbits = ''
@@ -97,6 +100,7 @@ def extract(bmp_filename):
         src.write(src_data)
         src.close()
 
+
 def extract_char(bmp_filename):
     bmp = open(bmp_filename, 'rb')
     bmp.seek(55)
@@ -116,13 +120,12 @@ def extract_char(bmp_filename):
         print decrypted[0]
 
 
-
 def main():
     root = Tk()
     root.title(u"LSB论文示例程序")
-    
-    Label(root, text=u"文件隐藏").grid(row=0, column=0, sticky=W+E,columnspan=2)
-    Label(root, text=u"文字隐藏").grid(row=0, column=2, sticky=W+E,columnspan=2)
+
+    Label(root, text=u"文件隐藏").grid(row=0, column=0, sticky=W+E, columnspan=2)
+    Label(root, text=u"文字隐藏").grid(row=0, column=2, sticky=W+E, columnspan=2)
     Label(root, text=u"打开图像").grid(row=1, column=0, sticky=E)
     Label(root, text=u"打开文件").grid(row=2, column=0, sticky=E)
     Label(root, text=u"打开图像").grid(row=1, column=2, sticky=E)
@@ -130,48 +133,59 @@ def main():
 
     imagename = ""
     filename = ""
-    wenzi = ""
+
     def findimage():
         global imagename
         imagename = tkFileDialog.askopenfilename()
-        if imagename[-4:].lower()!='.bmp':
+        if imagename[-4:].lower() != '.bmp':
             imagename = ""
-            tkMessageBox.showerror("message","请输入BMP格式的图像")
+            tkMessageBox.showerror("message", "请输入BMP格式的图像")
             findimage()
-
 
     def findfile():
         global filename
         filename = tkFileDialog.askopenfilename()
 
     def hideButtonDown():
-        global imagename,filename
+        global imagename, filename
         try:
             hide(imagename, filename)
-        except Exception,e:
+        except Exception, e:
             print e
-        tkMessageBox.showwarning("message",u"文件隐藏成功")
-
+        tkMessageBox.showwarning("message", u"文件隐藏成功")
 
     def extraButtonDown():
         global imagename
         extract(imagename)
-        tkMessageBox.showwarning("message",u"文件提取成功")
-    def hidecharButtonDown(chars):
+        tkMessageBox.showwarning("message", u"文件提取成功")
+
+    def hidecharButtonDown(contentw):
         global imagename
-        # try:
-  #           f = open(imagename,'a+')
-  #       except Exception,e:
-  #           print '[-] ',e
-  #       contentb = base64.standard_b64encode(content)
-  #       f.write('\n')
-  #       f.write(contentb) 
-  #       tkMessageBox.showwarning("message",u"信息隐藏成功")
-  #       f.close()
-       
-        tkMessageBox.showinfo(chars)
+
+        try:
+            f = open(imagename, 'a+')
+        except Exception, e:
+            print '[-] ', e
+        contentb = base64.standard_b64encode(contentw.get())
+        f.write('\n')
+        f.write(contentb)
+        tkMessageBox.showwarning("message", u"信息隐藏成功")
+        f.close()
+        # tkMessageBox.showinfo("message",contentw.get())
+
     def extracharButtonDown():
-        pass
+        global imagename
+        try:
+            f = open(imagename, 'rb')
+        except Exception, e:
+            print e
+        for line in f:
+            pass
+        f.close()
+        contentb = line
+        contentb = base64.decodestring(contentb)
+        tkMessageBox.showinfo(u"隐藏的内容为", contentb)
+
     choseimage_B = Button(root, text=u"选择图像", command=findimage)
     choseimage_B.grid(row=1, column=1)
     chosefile_B = Button(root, text=u"选择文件", command=findfile)
@@ -184,17 +198,13 @@ def main():
     choseimage_B2 = Button(root, text=u"选择图像", command=findimage)
     choseimage_B2.grid(row=1, column=3)
     contentw = Entry(root)
-    contentw.grid(row=2,column=3)
-    contentw
-    hidefile_B2 = Button(root, text=u"开始隐藏", command=hidecharButtonDown(contentw.get()))
+    contentw.grid(row=2, column=3)
+
+    hidefile_B2 = Button(
+        root, text=u"开始隐藏", command=lambda: hidecharButtonDown(contentw))
     hidefile_B2.grid(row=3, column=2)
     extrfile_B2 = Button(root, text=u"开始提取", command=extracharButtonDown)
     extrfile_B2.grid(row=3, column=3)
-    
-
-
-
-
 
     root.mainloop()
 
