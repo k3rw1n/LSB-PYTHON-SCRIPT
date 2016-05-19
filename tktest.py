@@ -8,6 +8,9 @@ import base64
 class HideException(Exception):
     pass
 
+class ExtractException(Exception) :
+    pass
+
 
 class UsageException(HideException):
 
@@ -152,6 +155,7 @@ def main():
             hide(imagename, filename)
         except Exception, e:
             print e
+            raise
         tkMessageBox.showwarning("message", u"文件隐藏成功")
 
     def extraButtonDown():
@@ -160,6 +164,7 @@ def main():
             extract(imagename)
         except Exception,e:
             print e
+            raise
         tkMessageBox.showwarning("message", u"文件提取成功")
 
     def hidecharButtonDown(contentw):
