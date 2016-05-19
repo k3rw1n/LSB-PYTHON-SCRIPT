@@ -156,7 +156,10 @@ def main():
 
     def extraButtonDown():
         global imagename
-        extract(imagename)
+        try:
+            extract(imagename)
+        except Exception,e:
+            print e
         tkMessageBox.showwarning("message", u"文件提取成功")
 
     def hidecharButtonDown(contentw):
