@@ -125,7 +125,7 @@ def extract_char(bmp_filename):
 
 def main():
     root = Tk()
-    root.title(u"LSB论文示例程序")
+    root.title(u"LSB示例程序")
 
     Label(root, text=u"文件隐藏").grid(row=0, column=0, sticky=W+E, columnspan=2)
     Label(root, text=u"文字隐藏").grid(row=0, column=2, sticky=W+E, columnspan=2)
